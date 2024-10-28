@@ -24,7 +24,8 @@ const openai = new OpenAI({
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
 
-const voiceID = "ZpEtuMdTIlJXYXAhevhG"; // Asegúrate de usar el ID correcto de la voz.
+//const voiceID = "ZpEtuMdTIlJXYXAhevhG"; 
+const voiceID = process.env.VOICE_API_KEY;// Asegúrate de usar el ID correcto de la voz.
 const modelID = "eleven_multilingual_v2";
 
 //vqoh9orw2tmOS3mY7D2p  (Sofia)
@@ -39,6 +40,7 @@ const port = 3003;
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
 
 app.get("/voices", async (req, res) => {
   res.send(await voice.getVoices(elevenLabsApiKey));
