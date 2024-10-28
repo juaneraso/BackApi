@@ -67,13 +67,13 @@ const execCommand = (command) => {
 //   });
 
 const lipSyncMessage = async (message) => {
-  console.log(message)
+  //console.log(message)
   const time = new Date().getTime();
   //const audioPath = path.join(__dirname, `/audios/message_${message}.mp3`);
   const audioPath = `./audios/message_${message}.mp3`;
   const outputJsonPath = `./audios/message_${message}.json`;
 
-  console.log(`Iniciando conversión para el mensaje ${message}...`);
+  //console.log(`Iniciando conversión para el mensaje ${message}...`);
 
   try {
     // Leer el archivo MP3 como buffer
@@ -82,8 +82,9 @@ const lipSyncMessage = async (message) => {
     // Ejecutar el proceso de conversión y lip-sync
     const outputJSONContent = await runCommands(audioBuffer);
 
-    console.log(`Conversión y lip-sync completados en ${new Date().getTime() - time} ms`);
-    console.log('Contenido del JSON de sincronización labial:', outputJSONContent);
+    //console.log(`Conversión y lip-sync completados en ${new Date().getTime() - time} ms`);
+    //console.log('Contenido del JSON de sincronización labial:', outputJSONContent);
+
     await fs.promises.writeFile(outputJsonPath,outputJSONContent);
 
     console.log(`Archivo JSON guardado en ${outputJsonPath}`);
