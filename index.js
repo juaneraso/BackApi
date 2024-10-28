@@ -24,7 +24,7 @@ const openai = new OpenAI({
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
 
-const voiceID =process.env.VOICE_API_KEY; // Asegúrate de usar el ID correcto de la voz.
+const voiceID = "IOyj8WtBHdke2FjQgGAr"; // Asegúrate de usar el ID correcto de la voz.
 const modelID = "eleven_multilingual_v2";
 
 //vqoh9orw2tmOS3mY7D2p  (Sofia)
