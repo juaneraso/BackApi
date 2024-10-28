@@ -70,7 +70,7 @@ const execCommand = (command) => {
 //   }
 // })();
 
-const audioPath = './audios/api_0.wav';
+const audioPath = './audios/api_0.mp3';
 const audioBuffer = fs.readFileSync(audioPath);
 
 // Ejecuta el proceso
