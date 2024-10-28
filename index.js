@@ -54,33 +54,47 @@ const execCommand = (command) => {
 };
 
 
-//audio: await audioFileToBase64("/home/app/audios/saludo.wav"),
 
 
-// const audioFilePath = path.join(process.cwd(), 'audios', 'api_0.wav');
-// const outputDirectory = path.join(process.cwd(), 'temp_output');
+// const audioPath = './audios/api_0.mp3';
+// const audioBuffer = fs.readFileSync(audioPath);
 
-// (async () => {
-//   try {
-//     const bufferAudio = fs.readFileSync(audioFilePath);
-//     const lipSyncData = await runCommands(bufferAudio); // Procesa el audio directamente
-//     console.log("Datos de sincronización de labios:", lipSyncData); // Muestra los resultados
-//   } catch (error) {
-//     console.error("Error al ejecutar Rhubarb Lip Sync:", error.message);
-//   }
-// })();
+// // Ejecuta el proceso
+// runCommands(audioBuffer)
+//   .then((outputJSONContent) => {
+//     console.log('Contenido del JSON de sincronización labial:', outputJSONContent);
+//   })
+//   .catch((error) => {
+//     console.error('Error al procesar el archivo:', error.message);
+//   });
 
-const audioPath = './audios/api_0.mp3';
-const audioBuffer = fs.readFileSync(audioPath);
+const lipSyncMessage = async (message) => {
+  console.log(message)
+  const time = new Date().getTime();
+  //const audioPath = path.join(__dirname, `/audios/message_${message}.mp3`);
+  const audioPath = `./audios/message_${message}.mp3`;
+  const outputJsonPath = `./audios/message_${message}.json`;
 
-// Ejecuta el proceso
-runCommands(audioBuffer)
-  .then((outputJSONContent) => {
+  console.log(`Iniciando conversión para el mensaje ${message}...`);
+
+  try {
+    // Leer el archivo MP3 como buffer
+    const audioBuffer = fs.readFileSync(audioPath);
+
+    // Ejecutar el proceso de conversión y lip-sync
+    const outputJSONContent = await runCommands(audioBuffer);
+
+    console.log(`Conversión y lip-sync completados en ${new Date().getTime() - time} ms`);
     console.log('Contenido del JSON de sincronización labial:', outputJSONContent);
-  })
-  .catch((error) => {
+    await fs.promises.writeFile(outputJsonPath,outputJSONContent);
+
+    console.log(`Archivo JSON guardado en ${outputJsonPath}`);
+
+  } catch (error) {
     console.error('Error al procesar el archivo:', error.message);
-  });
+  }
+};
+
 
 
 
@@ -94,29 +108,29 @@ app.post("/chat", async (req, res) => {
       messages: [
         {
           text: "Hey dear... How was your day?",
-          audio: await audioFileToBase64("/home/app/audios/saludo.wav"),
-          lipsync: await readJsonTranscript("/home/app/audios/saludo.json"),
+          audio: await audioFileToBase64("/audios/saludo.wav"),
+          lipsync: await readJsonTranscript("/audios/saludo.json"),
           facialExpression: "smile",
           animation: "Talking_1",
         },
         {
           text: "I missed you so much... Please don't go for so long!",
-          audio: await audioFileToBase64("/home/app/audios/saludo2.wav"),
-          lipsync: await readJsonTranscript("/home/app/audios/saludo2.json"),
+          audio: await audioFileToBase64("/audios/saludo2.wav"),
+          lipsync: await readJsonTranscript("/audios/saludo2.json"),
           facialExpression: "smile",
           animation: "Talking_1",
         },
         {
           text: "I missed you so much... Please don't go for so long!",
-          audio: await audioFileToBase64("/home/app/audios/camara_1.wav"),
-          lipsync: await readJsonTranscript("/home/app/audios/camara_1.json"),
+          audio: await audioFileToBase64("/audios/camara_1.wav"),
+          lipsync: await readJsonTranscript("/audios/camara_1.json"),
           facialExpression: "smile",
           animation: "Talking_0",
         },      
         {
           text: "I missed you so much... Please don't go for so long!",
-          audio: await audioFileToBase64("/home/app/audios/saludo3.wav"),
-          lipsync: await readJsonTranscript("/home/app/audios/saludo3.json"),
+          audio: await audioFileToBase64("/audios/saludo3.wav"),
+          lipsync: await readJsonTranscript("/audios/saludo3.json"),
           facialExpression: "smile",
           animation: "Talking_1",
         },   
@@ -191,7 +205,7 @@ app.post("/chat", async (req, res) => {
   // Generación de audio con Eleven Labs
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
-    const fileName = `/home/app/audios/message_${i}.mp3`;
+    const fileName = `audios/message_${i}.mp3`;
     const textInput = message.text;
 
     //console.log(textInput);
@@ -224,7 +238,7 @@ app.post("/chat", async (req, res) => {
         }
       );
 
-      await fs.writeFile(fileName, response.data);
+      await fs.promises.writeFile(fileName, response.data);
 
       // Generar lip sync
 
@@ -232,7 +246,7 @@ app.post("/chat", async (req, res) => {
 
       // Asignar audio y lip sync al mensaje
       message.audio = await audioFileToBase64(fileName);
-      message.lipsync = await readJsonTranscript(`/home/app/audios/message_${i}.json`);
+      message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
       //message.lipsync = mensaje; 
 
     } catch (error) {
@@ -247,12 +261,12 @@ app.post("/chat", async (req, res) => {
 
 
 const readJsonTranscript = async (file) => {
-  const data = await fs.readFile(file, "utf8");
+  const data = await fs.promises.readFile(file, "utf8");
   return JSON.parse(data);
 };
 
 const audioFileToBase64 = async (file) => {
-  const data = await fs.readFile(file);
+  const data = await fs.promises.readFile(file);
   return data.toString("base64");
 };
 
