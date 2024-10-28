@@ -1,0 +1,5 @@
+services:
+  chango:
+    build: .
+    ports:
+      - "3002:3002"
