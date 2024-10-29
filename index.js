@@ -21,6 +21,7 @@ dotenv.config();
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "-",
 });
+console.log("ELEVEN_LABS_API_KEY:", process.env.ELEVEN_LABS_API_KEY ? "Present" : "Missing");
 
 const elevenLabsApiKey = process.env.ELEVEN_LABS_API_KEY;
 
